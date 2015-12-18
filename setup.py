@@ -21,6 +21,7 @@ setup(
         'Flask',
         'arrow',
         'gunicorn',
+        'orloclient>=0.0.4',
         'pytz',
     ],
     tests_require=[

@@ -1,13 +1,22 @@
 from orloWeb import app
-from flask import request, abort
+from orloWeb import orlo
+from flask import request, abort, jsonify
 import arrow
 import datetime
-import orloclient
 
 
 @app.route('/ping', methods=['GET'])
+def ping():
+    """
+    Ping!
+    """
+    return "pong"
+
+
+@app.route('/', methods=['GET'])
 def home():
     """
     The home page
     """
-    return "pong"
+    releases = orlo.get_releases()
+    return releases

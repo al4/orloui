@@ -1,9 +1,13 @@
 from __future__ import print_function, unicode_literals
 import orloWeb
+from orloclient.mock_orlo import MockOrlo
 from orloWeb.config import config
 from flask.ext.testing import TestCase
 
 __author__ = 'alforbes'
+
+orloWeb.orlo = MockOrlo(uri='http://localhost/dummy')
+orloWeb.views.orlo = MockOrlo(uri='http://localhost/dummy')
 
 
 class ViewTest(TestCase):
@@ -26,3 +30,11 @@ class ViewTest(TestCase):
         """
         response = self.client.get('/ping')
         self.assert200(response)
+
+    def test_home(self):
+        """
+        Test the home page loads
+        """
+        response = self.client.get('/')
+        self.assert200(response)
+

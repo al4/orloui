@@ -1,7 +1,7 @@
 from flask import Flask
 from logging.handlers import RotatingFileHandler
-
-from orlo.config import config
+from orloWeb.config import config
+from orloWeb.orlo_client import orlo
 
 app = Flask(__name__)
 
@@ -23,3 +23,4 @@ if logfile != 'disabled':
 
 # Must be imported last
 import orloWeb.views
+
