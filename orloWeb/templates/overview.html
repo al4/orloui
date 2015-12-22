@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block nav_overview %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="sub-header">Current Status</h2>
+    </div>
+    <div class="text-center">
+        {% include 'release_boxes.html' %}
+    </div>
+</div>
+
+<div class="row">
+    <h2 class="sub-header">Stats <small>last month</small></h2>
+</div>
+<div class="row placeholders">
+    <div class="col-xs-6 col-sm-4 placeholder">
+      <canvas id="chart-rollback" width="300px" height="200px"></canvas>
+      <h4>Releases</h4>
+    </div>
+    <div class="col-xs-6 col-sm-4 placeholder">
+      <canvas id="chart-package" width="300px" height="200px"></canvas>
+      <h4>Releases by Package</h4>
+    </div>
+    <div class="col-xs-6 col-sm-4 placeholder">
+      <canvas id="chart-package-rollback" width="300px" height="200px"></canvas>
+      <h4>Rollbacks by Package</h4>
+    </div>
+</div>
+
+<div class="row">
+  <h2 class="sub-header">Releases <small>last 7 days</small></h2>
+</div>
+
+<div class="row">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>References</th>
+          <th>User</th>
+          <th>Team</th>
+          <th>Start</th>
+          <th>Finish</th>
+          <th>Duration</th>
+          <th>Packages</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for release in releases_past %}
+        <tr>
+            <td><a href="/display/release/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a>
+            </td>
+            <td>{{ release['references'] | join(', ')}}</td>
+            <td>{{ release['user'] }}</td>
+            <td>{{ release['team'] }}</td>
+            <td>{{ release['stime'] | friendly_time }}</td>
+            <td>{{ release['ftime'] | friendly_time }}</td>
+            <td>{{ release['duration'] }}</td>
+            <td><table width=100%>
+                {% for package in release.packages %}
+                <tr>
+                    {% if release['rollback'] %}<td class="danger">{% else %}<td>{% endif %}
+                    <td><a href="/stats/package/{{package['name']}}">{{ package['name'] }}</a></td>
+                    <td class="right-align">{{ package['version'] }}</td>
+                </tr>
+                        {% endfor %}
+            </table></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="static/Chart.min.js"></script>
+<script type="text/javascript">
+    Chart.defaults.global.responsive = true;
+    var ctx1= document.getElementById("chart-package").getContext("2d");
+    var ctx2 = document.getElementById("chart-rollback").getContext("2d");
+    var ctx3 = document.getElementById("chart-package-rollback").getContext("2d");
+
+    var chart_data_package = {{ chart_package_data | tojson }}
+    var chart_data_rollback = {{ chart_rollback_data | tojson }}
+    var chart_data_package_rollback = {{ chart_package_rollback_data | tojson }}
+
+    var data_rollback = []
+    var options = {
+        segmentShowStroke : true,
+        segmentStrokeColor : "#fff",
+        segmentStrokeWidth : 1,
+        percentageInnerCutout : 0, // This is 0 for Pie charts
+        animationSteps : 100,
+        animationEasing : "easeOutBounce",
+        animateRotate : true,
+        animateScale : false,
+        legendTemplate : {% raw %}"<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"{% endraw %}
+    }
+
+    var packageChart = new Chart(ctx1).Pie(chart_data_package,options);
+    var rollbackChart = new Chart(ctx2).Pie(chart_data_rollback,options);
+    var packageRollbackChart = new Chart(ctx3).Pie(chart_data_package_rollback,options);
+</script>
+{% endblock %}
