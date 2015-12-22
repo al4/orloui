@@ -1,12 +1,14 @@
-from orloWeb import app
-from orloWeb import charts
-from orloWeb import orlo
+from copy import copy
+from orloWeb import app, charts, orlo, config
 from orloWeb.exceptions import OrloConnectionError
 import orloWeb.template_filters
-from flask import request, abort, jsonify, render_template
+from flask import request, abort, jsonify, render_template, redirect
 from requests.exceptions import ConnectionError
 import arrow
 import datetime
+import json
+
+TFMT = config.get('main', 'time_format')
 
 
 @app.errorhandler(OrloConnectionError)
@@ -24,22 +26,25 @@ def ping():
 
 
 @app.route('/', methods=['GET'])
-def overview():
+def page_overview():
     """
     The home page
 
     Fetches the most recent releases
     """
 
-    yesterday = arrow.utcnow().replace(days=-1).strftime('%Y-%m-%dT%H:%M:%SZ')
-    last_week = arrow.utcnow().replace(days=-28).strftime('%Y-%m-%dT%H:%M:%SZ')
-    last_month = arrow.utcnow().replace(months=-1).strftime('%Y-%m-%dT%H:%M:%SZ')
+    # yesterday = arrow.utcnow().replace(days=-1).strftime(TFMT)
+    last_week = arrow.utcnow().replace(days=-14).strftime(TFMT)
+    last_month = arrow.utcnow().replace(months=-1).strftime(TFMT)
+    last_year = arrow.utcnow().replace(years=-1).strftime(TFMT)
 
     try:
-        last_rollback = orlo.get_releases(package_rollback=True, stime_after=last_week)[
-            'releases'][0]
-        r_lastwk = orlo.get_releases(stime_after=last_week)['releases']
-        r_yest = orlo.get_releases(stime_after=yesterday)['releases']
+        last_release = orlo.get_releases(latest=True, stime_after=last_year,
+                                         package_rollback=False)['releases'][0]
+        last_rollback = orlo.get_releases(latest=True, stime_after=last_year,
+                                          package_rollback=True)['releases'][0]
+        r_last_week = orlo.get_releases(stime_after=last_week)['releases']
+        # r_yesterday = orlo.get_releases(stime_after=yesterday)['releases']
         r_month = orlo.get_releases(stime_after=last_month)['releases']
     except ConnectionError:
         # Catch requests connection error and rethrow
@@ -55,9 +60,9 @@ def overview():
 
     return render_template(
         'overview.html',
-        last_release=r_lastwk[-1:],
+        last_release=last_release,
         last_rollback=last_rollback,  # release info
-        releases_past=r_lastwk,
+        releases_past=r_last_week,
         releases_in_progress=releases_in_progress,  # int
         rollbacks_in_progress=rollbacks_n_progress,  #
         chart_package_data=chart_package_data,
@@ -66,8 +71,40 @@ def overview():
     )
 
 
-@app.route('/list', methods=['GET'])
-def list():
+@app.route('/release', methods=['GET'])
+def page_releases():
     """
     List of releases
     """
+
+    args = dict((k, v) for k, v in request.args.items())
+    per_page = int(args.pop('pp', 30))
+
+    query_params = {}
+    for field, value in args.iteritems():
+        query_params[field] = value
+
+    releases = orlo.get_releases(**query_params)['releases']
+
+    return render_template('list.html', releases=reversed(releases),
+                           package_list=['foo', 'bar'],
+                           user_list=['foouser', 'baruser'],
+                           )
+
+
+@app.route('/release/<release_id>', methods=['GET'])
+def page_release_single(release_id):
+    """
+    Display a single release
+
+    :param UUID release_id: ID of release to display
+    """
+
+    release = orlo.get_releases(release_id)['releases'][0]
+    print(release)
+
+    return render_template('display.html',
+                           release=release)
+
+
+

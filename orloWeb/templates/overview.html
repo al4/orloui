@@ -52,14 +52,14 @@
       <tbody>
         {% for release in releases_past %}
         <tr>
-            <td><a href="/display/release/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a>
+            <td><a href="/release/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a>
             </td>
             <td>{{ release['references'] | join(', ')}}</td>
             <td>{{ release['user'] }}</td>
             <td>{{ release['team'] }}</td>
-            <td>{{ release['stime'] | friendly_time }}</td>
-            <td>{{ release['ftime'] | friendly_time }}</td>
-            <td>{{ release['duration'] }}</td>
+            <td>{{ release['stime'] | humanise_time }}</td>
+            <td>{{ release['ftime'] | humanise_time }}</td>
+            <td>{{ release['duration'] | humanise_duration }}</td>
             <td><table width=100%>
                 {% for package in release.packages %}
                 <tr>

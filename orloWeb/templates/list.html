@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Releases{% endblock %}
+{% block nav_releases %}active{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12">
+        <h2 class="sub-header">Releases</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-10 col-md-10">
+        Showing <div class="btn-group btn-group-xs">
+              <button class="btn btn-default dropdown-toggle" type="button" id="filterlimit" data-toggle="dropdown" aria-expanded="true">
+                  {% if request.args['limit'] == '0' %}all
+                  {% else %}{{ request.args['limit'] }}{% endif %}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="filterlimit">
+                  {% for n in ['10', '25', '50', '100', '200' ] %}
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('limit').addSearch({ limit: '{{ n }}' });">{{ n }}</a></li>
+                  {% endfor %}
+                <li class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('limit').addSearch({ limit: '0' });">All</a></li>
+              </ul>
+        </div> releases
+    </div>
+    <div class="col-xs-2 text-right">
+        <button class="btn btn-default dropdown-toggle btn" type="button" id="download" data-toggle="dropdown" aria-expanded="true">
+            Download
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="download">
+            <li role="presentation"><a href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('view').addSearch({ view: 'json' });">JSON</a></li>
+            <li role="presentation"><a href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('view').addSearch({ view: 'csv' });">CSV</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 table-responsive">
+        <table class="table table-striped">
+        <tr>
+            <th>
+              <button type="button" class="btn btn-default disabled btn-sm">#</button>
+            </th>
+            <th>
+              <button type="button" class="btn btn-default disabled btn-sm">References</button>
+            </th>
+
+            <th>
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="filteruser" data-toggle="dropdown" aria-expanded="true">
+                    User
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="filteruser">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('user');">Any</a></li>
+                    <li class="divider"></li>
+                    {% for u in user_list %}
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('user').addSearch({ user: '{{ u }}' });">{{ u }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+            </th>
+
+            <th>
+              <button type="button" class="btn btn-default disabled btn-sm">Start Time</button>
+            </th>
+            <th>
+              <button type="button" class="btn btn-default disabled btn-sm">Duration</button>
+            </th>
+            <th>
+              <button type="button" class="btn btn-default disabled btn-sm">Finish Time</button>
+            </th>
+
+            <th>
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="filterrollback" data-toggle="dropdown" aria-expanded="true">
+                    Status
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="filterstatus">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status');">Any</a></li>
+                    <li class="divider"></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status').addSearch({ status: '0' });">Successful</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status').addSearch({ status: '1' });">Failed</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status').addSearch({ status: '-1' });">In progress</a></li>
+                  </ul>
+                </div>
+            </th>
+
+            <th>
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="filterrollback" data-toggle="dropdown" aria-expanded="true">
+                    Rollback
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="filterrollback">
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="javascript:void(0)"
+                           onclick="window .location.href = URI(location.href).removeSearch('package_rollback');">Any</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="javascript:void(0)"
+                           onclick="window .location.href = URI(location.href).removeSearch
+                           ('package_rollback').addSearch({ rollback: '1' }); ">True</a> </li>
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="javascript:void(0)"
+                           onclick="window .location.href = URI(location.href).removeSearch
+                           ('package_rollback').addSearch({ rollback: '0' }); ">False</a>
+                    </li>
+                  </ul>
+                </div>
+            </th>
+
+            <th>
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="filteruser" data-toggle="dropdown" aria-expanded="true">
+                    Package
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="filterpackage">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('package_name');">Any</a></li>
+                    <li class="divider"></li>
+                    {% for pkg_name in package_list %}
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('package_name').addSearch({ package_name: '{{ pkg_name }}' });">{{ pkg_name }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+            </th>
+
+        </tr>
+        {% for release in releases %}
+        <tr>
+            <td><a href="/release/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a></td>
+            <td>{{ release['references'] | join('<br />') }}</td>
+            <td>{{ release['user'] }}</td>
+            <td>{{ release['stime'] | humanise_time }}</td>
+            <td>{{ release['duration'] | humanise_duration }}</td>
+            <td>{{ release['ftime'] | humanise_time }}</td>
+            {% set release_status = release | get_release_status %}
+            {% if release_status == "In Progress" %}<td class="info">
+            {% elif release_status == "Failed" %}<td class="danger">
+            {% else %}<td>{% endif %}
+                {{ release_status }}
+            </td>
+            {%  set release_rollback = release | get_rollback_status %}
+            <td>{{ release_rollback }}</td>
+            <td class="subtable">
+                <table>
+                {% for package in release.packages %}
+                    {% if package['rollback'] %}<tr class="danger">
+                    {% else %}<tr>
+                    {%  endif %}
+                        <td><a href="/stats/package/{{ package['name'] }}">{{ package['name'] }}</a></td>
+                        <td class="right-align">{{ package['version'] }}</td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -129,7 +129,7 @@ Vagrant.configure(2) do |config|
     file = disabled
     EOF
 
-    sudo pip install orloclient
+    sudo pip install orlo orloclient Flask-Testing
     sudo python /vagrant/setup.py install
   SHELL
 end

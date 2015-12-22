@@ -1,0 +1,90 @@
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+    {% if releases_in_progress|length > 0 %}
+        {% for release in releases_in_progress %}
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h2>Release in progress<br /><small>{{ release['id']}} started {{
+                        release['stime'] | humanise_time_relative }} ago</small></h2>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                {% for package in release.packages %}
+                <tr>
+                    <td>{{ package['name'] }}</td>
+                    <td>{{ package['version'] }}</td>
+                    {% if package['success'] == "Yes" %}<td class="success">Completed</td>
+                    {% elif package['stime'] != None %}<td class="info">In Progress</td>
+                    {% else %}<td>-</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Last release<br />{{ last_release['ftime'] | humanise_time_relative }} ago</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    {% for package in last_release.packages %}
+                    <tr>
+                        <td>{{ package['name'] }} </td>
+                        <td>{{ package['version'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+
+    <div class="col-xs-12 col-md-6">
+    {% if rollbacks_in_progress|length > 0 %}
+        {% for release in rollbacks_in_progress %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h2>Rollback in progress<br /><small>{{ release['ticket']}} started {{ release['stime_delta'] }} ago</small></h2>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                {% for package in release.packages %}
+                <tr>
+                    <td>{{ package['name'] }}</td>
+                    <td>{{ package['version'] }}</td>
+                    {% if package['success'] == "Yes" %}<td class="success">Completed</td>
+                    {% elif package['stime'] != None %}<td class="info">In Progress</td>
+                    {% else %}<td>-</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Last rollback<br />{{ last_rollback['ftime'] | humanise_time_relative }}
+                    ago</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                {% for package in last_rollback.packages %}
+                    <tr>
+                        <td>{{ package['name'] }} </td>
+                        <td>{{ package['version'] }}</td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+
+</div>
+

@@ -29,4 +29,5 @@ if logfile != 'disabled':
 
 # Must be imported last
 import orloWeb.views
+import orloWeb.view_stats
 
