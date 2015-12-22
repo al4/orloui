@@ -1,10 +1,9 @@
 orloclient
 gunicorn
-arrow==0.7.0
-Flask==0.10.1
-Flask-HTTPAuth==2.2.0
-Jinja2==2.7.1
-MarkupSafe==0.18
-Werkzeug==0.9.4
-itsdangerous==0.23
-passlib==1.6.1
+arrow
+Flask
+Flask-HTTPAuth
+Jinja2
+MarkupSafe
+Werkzeug
+itsdangerous
