@@ -4,9 +4,13 @@
 from setuptools import setup
 import multiprocessing  # nopep8
 
+VERSION = '0.0.4'
+version_file = open('./orloWeb/_version.py', 'w')
+version_file.write("__version__ = '{}'".format(VERSION))
+
 setup(
     name='orloWeb',
-    version='0.0.1',
+    version=VERSION,
     description='User interface to Orlo',
     author='Alex Forbes',
     author_email='alforbes@ebay.com',
