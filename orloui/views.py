@@ -71,7 +71,7 @@ def page_overview():
     )
 
 
-@app.route('/release', methods=['GET'])
+@app.route('/releases', methods=['GET'])
 def page_releases():
     """
     List of releases
@@ -92,7 +92,7 @@ def page_releases():
                            )
 
 
-@app.route('/release/<release_id>', methods=['GET'])
+@app.route('/releases/<release_id>', methods=['GET'])
 def page_release_single(release_id):
     """
     Display a single release
