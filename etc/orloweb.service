@@ -3,13 +3,13 @@
 [Unit]
 Description=Orlo Web Interface
 After=network.target
-ConditionPathExists=/usr/share/python/python-orloweb/bin/gunicorn
+ConditionPathExists=/usr/share/python/python-orloui/bin/gunicorn
 
 [Service]
 Type=simple
 User=orlo
 Group=orlo
-ExecStart=/usr/share/python/python-orloweb/bin/gunicorn -w 4 -b 127.0.0.1:8080 orloWeb:app
+ExecStart=/usr/share/python/python-orloui/bin/gunicorn -w 4 -b 127.0.0.1:8080 orloui:app
 
 [Install]
 WantedBy=multi-user.target

@@ -96,7 +96,7 @@ Vagrant.configure(2) do |config|
         root /var/www/html;
         index index.html;
         server_name vagrant;
-        location /ui/ { try_files $uri @proxy_to_orloweb; }
+        location /ui/ { try_files $uri @proxy_to_orloui; }
         location /api/ { try_files $uri @proxy_to_orlo; }
 
         location @proxy_to_orlo {
@@ -106,7 +106,7 @@ Vagrant.configure(2) do |config|
                 proxy_pass http://127.0.0.1:8080;
         }
 
-        location @proxy_to_orloweb {
+        location @proxy_to_orloui {
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header Host $http_host;
                 proxy_redirect off;

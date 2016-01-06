@@ -1,13 +1,13 @@
 from __future__ import print_function, unicode_literals
-import orloWeb
+import orloui
 from orloclient.mock_orlo import MockOrlo
-from orloWeb.config import config
+from orloui.config import config
 from flask.ext.testing import TestCase
 
 __author__ = 'alforbes'
 
-orloWeb.orlo = MockOrlo(uri='http://localhost/dummy')
-orloWeb.views.orlo = MockOrlo(uri='http://localhost/dummy')
+orloui.orlo = MockOrlo(uri='http://localhost/dummy')
+orloui.views.orlo = MockOrlo(uri='http://localhost/dummy')
 
 
 class ViewTest(TestCase):
@@ -16,13 +16,13 @@ class ViewTest(TestCase):
     """
 
     def create_app(self):
-        app = orloWeb.app
+        app = orloui.app
         app.config['TESTING'] = True
         app.config['DEBUG'] = True
         app.config['TRAP_HTTP_EXCEPTIONS'] = True
         app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
 
-        return orloWeb.app
+        return orloui.app
 
     def test_ping(self):
         """

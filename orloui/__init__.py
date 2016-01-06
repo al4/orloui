@@ -1,8 +1,8 @@
 from flask import Flask
 from logging.handlers import RotatingFileHandler
-from orloWeb.config import config
-from orloWeb.orlo_client import orlo
-from orloWeb._version import __version__
+from orloui.config import config
+from orloui.orlo_client import orlo
+from orloui._version import __version__
 
 
 app = Flask(__name__)
@@ -28,6 +28,6 @@ if logfile != 'disabled':
     app.logger.addHandler(handler)
 
 # Must be imported last
-import orloWeb.views
-import orloWeb.view_stats
+import orloui.views
+import orloui.view_stats
 

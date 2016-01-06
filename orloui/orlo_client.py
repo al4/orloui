@@ -1,4 +1,4 @@
-from orloWeb.config import config
+from orloui.config import config
 import orloclient
 
 

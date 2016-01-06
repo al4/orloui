@@ -1,7 +1,7 @@
 from copy import copy
-from orloWeb import app, charts, orlo, config
-from orloWeb.exceptions import OrloConnectionError
-import orloWeb.template_filters
+from orloui import app, charts, orlo, config
+from orloui.exceptions import OrloConnectionError
+import orloui.template_filters
 from flask import request, abort, jsonify, render_template, redirect
 from requests.exceptions import ConnectionError
 import arrow

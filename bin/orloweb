@@ -1,4 +1,4 @@
-#!/usr/share/python/python-orloWeb/bin/python
+#!/usr/share/python/python-orloui/bin/python
 
 import argparse
 
@@ -8,7 +8,7 @@ def parse_args():
 
     p_config = argparse.ArgumentParser(add_help=False)
     p_config.add_argument('--file', '-f', dest='filepath', help="File to write to",
-                          default='/etc/orlo/orloWeb.conf')
+                          default='/etc/orlo/orloui.conf')
 
     p_server = argparse.ArgumentParser(add_help=False)
     p_server.add_argument('--host', '-H', dest='host', default='127.0.0.1', help="Address to listen on")
@@ -29,7 +29,7 @@ def parse_args():
 
 
 def write_config(args):
-    from orloWeb import config
+    from orloui import config
     config_file = open(args.filepath, 'w')
     config.write(config_file)
 
@@ -38,7 +38,7 @@ def run_server(args):
     print("Warning: this is a development server and not suitable "
           "for production, we recommend running under gunicorn.")
 
-    from orloWeb import app
+    from orloui import app
     app.config['DEBUG'] = True
     app.config['TRAP_HTTP_EXCEPTIONS'] = True
     app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
