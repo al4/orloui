@@ -52,7 +52,7 @@
       <tbody>
         {% for release in releases_past %}
         <tr>
-            <td><a href="/release/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a>
+            <td><a href="/releases/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a>
             </td>
             <td>{{ release['references'] | join(', ')}}</td>
             <td>{{ release['user'] }}</td>

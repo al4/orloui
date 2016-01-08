@@ -74,7 +74,6 @@ def get_release_status(release):
 @app.template_filter('get_rollback_status')
 def get_rollback_status(release):
     statuses = set([p['rollback'] for p in release['packages']])
-    print(statuses)
 
     if True in statuses:
         return "Yes"

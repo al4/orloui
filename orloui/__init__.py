@@ -28,6 +28,7 @@ if logfile != 'disabled':
     app.logger.addHandler(handler)
 
 # Must be imported last
+import orloui.errors
 import orloui.views
 import orloui.view_stats
 

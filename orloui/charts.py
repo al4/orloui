@@ -41,20 +41,93 @@ DATASET_ROLLBACK = {
 }
 
 
-def pie(releases):
+def pie_normal_vs_rollback(releases):
+    """
+    Build a pie chart of normal releases compared to rollbacks
+
+    :param releases: List of releases
+    :return:
+    """
+
+    c_normal = 0
+    c_rollback = 0
+
+    # If any package in a release is a rollback, the release is a rollback
+    # Else it is normal
+    # TODO this should really be determined by the orlo API rather than logic here
+    for r in releases:
+        for p in r['packages']:
+            if p['rollback']:
+                c_rollback += 1
+                break
+        # If not of the packages broke the loop, normal release
+        c_normal += 1
+
+    return [
+        {
+            "value": c_normal,
+            "color": '#D7EBDC',
+            "highlight": '#7AA0AD',
+            "label": "Normal Release"
+        },
+        {
+            "value": c_rollback,
+            "color": '#FFCEB7',
+            "highlight": '#7AA0AD',
+            "label": "Rollbacks"
+        }
+    ]
+
+
+def pie_releases_by_package(releases):
     """
     Return package stats given a list of releases in JSON format suitable for
     use by Chart.js
+
+    :param releases: List of dictionaries containing orlo releases
     """
 
-    package_data = []
-    package_rollback_data = []
+    colours = cycle(['#D6C9D2', '#FFCEB7', '#EAD6CB', '#E2DFD3', '#D7EBDC'])
 
+    # First build counts of all the packages
     packages = {}
-    packages_rollback = {}
+    for r in releases:
+        for p in r['packages']:
+            if p['rollback']:
+                continue
+            else:
+                try:
+                    packages[p['name']] += 1
+                except KeyError:
+                    packages[p['name']] = 1
 
-    # colours = cycle(['#128C80', '#185556', '#128C80', '#E2E8CE', '#D9C127'])
-    # colours = cycle(['#556270', '#4ECDC4', '#C7F464', '#FF6B6B', '#C44D58'])
+    if len(packages) == 0:
+        packages['none'] = 1
+
+    # Generate the package chart data
+    chart_data = []
+    for package, count in packages.iteritems():
+        chart_data.append({
+            "value": count,
+            "color": colours.next(),
+            "highlight": '#7AA0AD',
+            "label": package
+        })
+
+    return chart_data
+
+
+def pie_rollbacks_by_package(releases):
+    """
+    Return package stats given a list of releases in JSON format suitable for
+    use by Chart.js
+
+    :param releases: List of dictionaries containing orlo releases
+    """
+
+    chart_data = []
+    packages = {}
+
     colours = cycle(['#D6C9D2', '#FFCEB7', '#EAD6CB', '#E2DFD3', '#D7EBDC'])
 
     # First build counts of all the packages
@@ -62,55 +135,24 @@ def pie(releases):
         for p in r['packages']:
             if p['rollback']:
                 try:
-                    packages_rollback[p['name']] += 1
-                except KeyError:
-                    packages_rollback[p['name']] = 1
-            else:
-                try:
                     packages[p['name']] += 1
                 except KeyError:
                     packages[p['name']] = 1
+                continue  # so we don't count the same release multiple times
 
-    # Generate the package chart data
+    if len(packages) == 0:
+        packages['none'] = 0
+
+    # Generate the chart data
     for package, count in packages.iteritems():
-        package_data.append({
+        chart_data.append({
             "value": count,
             "color": colours.next(),
             "highlight": '#7AA0AD',
             "label": package
-            })
+        })
 
-    for package, count in packages_rollback.iteritems():
-        package_rollback_data.append({
-            "value": count,
-            "color": colours.next(),
-            "highlight": '#7AA0AD',
-            "label": package
-            })
-
-    c = 0
-    for k, v in packages.iteritems():
-        c += v
-
-    c_normal = [v for k, v in packages_rollback.iteritems()]
-    c_rollbacks = [v for k, v in packages_rollback.iteritems()]
-
-    rollback_data = [
-        {
-            "value": sum(c_normal),
-            "color": '#D7EBDC',
-            "highlight": '#7AA0AD',
-            "label": "Normal Release"
-        },
-        {
-            "value": sum(c_rollbacks),
-            "color": '#FFCEB7',
-            "highlight": '#7AA0AD',
-            "label": "Rollbacks"
-        }
-    ]
-
-    return package_data, package_rollback_data, rollback_data
+    return chart_data
 
 
 def bar_monthly(releases):

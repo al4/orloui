@@ -38,3 +38,24 @@ class ViewTest(TestCase):
         response = self.client.get('/')
         self.assert200(response)
 
+    def test_status(self):
+        """
+        Test status page loads
+        """
+        response = self.client.get('/status')
+        self.assert200(response)
+
+    def test_releases(self):
+        """
+        Test /releases
+        """
+        response = self.client.get('/releases')
+        self.assert200(response)
+
+    def test_releases_with_id(self):
+        """
+        Test /releases/<id>
+        """
+        # Need an ID to test!
+        response = self.client.get('/releases/')
+        self.assert200(response)

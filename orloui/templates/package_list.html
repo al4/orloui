@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Display{% endblock %}
+{% block nav_stats_pkg %}active{% endblock %}
+
+{% block body %}
+<h3>Select a Package:</h3>
+<div class="row">
+    {% for pkg in packages %}
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <p><a href="/packages/stats/{{pkg}}">{{ pkg }}</a></p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

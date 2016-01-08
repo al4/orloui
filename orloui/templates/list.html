@@ -10,32 +10,46 @@
 </div>
 
 <div class="row">
-    <div class="col-xs-10 col-md-10">
-        Showing <div class="btn-group btn-group-xs">
-              <button class="btn btn-default dropdown-toggle" type="button" id="filterlimit" data-toggle="dropdown" aria-expanded="true">
-                  {% if request.args['limit'] == '0' %}all
-                  {% else %}{{ request.args['limit'] }}{% endif %}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="filterlimit">
-                  {% for n in ['10', '25', '50', '100', '200' ] %}
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('limit').addSearch({ limit: '{{ n }}' });">{{ n }}</a></li>
-                  {% endfor %}
-                <li class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('limit').addSearch({ limit: '0' });">All</a></li>
-              </ul>
-        </div> releases
+  <div class="col-xs-10 col-md-10">
+    Page size: <div class="btn-group btn-group-xs">
+      <button class="btn btn-default dropdown-toggle" type="button" id="pp"
+              data-toggle="dropdown" aria-expanded="true">
+        {% if request.args['pp'] == '0' %}all
+        {% else %}{{ request.args['pp'] }}{% endif %}
+      <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="pp">
+        {% for n in ['10', '25', '50', '100', '200' ] %}
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="javascript:void(0)"
+             onclick="window.location.href = URI(location.href).removeSearch('pp')
+                 .addSearch({ pp: '{{ n }}' });
+             ">
+            {{ n }}
+          </a>
+        </li>
+        {% endfor %}
+        <li class="divider"></li>
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="javascript:void(0)"
+             onclick="window.location.href = URI(location.href).removeSearch('pp')
+             .addSearch({ pp: '0' }); ">
+            All
+          </a>
+        </li>
+      </ul>
     </div>
-    <div class="col-xs-2 text-right">
-        <button class="btn btn-default dropdown-toggle btn" type="button" id="download" data-toggle="dropdown" aria-expanded="true">
-            Download
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="download">
-            <li role="presentation"><a href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('view').addSearch({ view: 'json' });">JSON</a></li>
-            <li role="presentation"><a href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('view').addSearch({ view: 'csv' });">CSV</a></li>
-        </ul>
-    </div>
+  </div>
+  <div class="col-xs-2 text-right">
+      <button class="btn btn-default dropdown-toggle btn" type="button" id="download" data-toggle="dropdown" aria-expanded="true">
+          Download
+          <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="download">
+          <li role="presentation"><a href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('view').addSearch({ view: 'json' });">JSON</a></li>
+          <li role="presentation"><a href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('view').addSearch({ view: 'csv' });">CSV</a></li>
+      </ul>
+  </div>
 </div>
 
 <div class="row">
@@ -84,9 +98,25 @@
                   <ul class="dropdown-menu" role="menu" aria-labelledby="filterstatus">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status');">Any</a></li>
                     <li class="divider"></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status').addSearch({ status: '0' });">Successful</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status').addSearch({ status: '1' });">Failed</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status').addSearch({ status: '-1' });">In progress</a></li>
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window
+                         .location.href = URI(location.href).removeSearch('status')
+                         .addSearch({ status: 'SUCCESSFUL' }); ">
+                        Successful
+                      </a>
+                    </li>
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window
+                      .location.href = URI(location.href).removeSearch('status')
+                      .addSearch({status: 'Failed' });">
+                        Failed
+                      </a>
+                    </li>
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="window.location.href = URI(location.href).removeSearch('status').addSearch({ status: '-1' });">
+                        In progress
+                      </a>
+                    </li>
                   </ul>
                 </div>
             </th>
@@ -100,17 +130,18 @@
                   <ul class="dropdown-menu" role="menu" aria-labelledby="filterrollback">
                     <li role="presentation">
                         <a role="menuitem" tabindex="-1" href="javascript:void(0)"
-                           onclick="window .location.href = URI(location.href).removeSearch('package_rollback');">Any</a>
+                           onclick="window.location.href = URI(location.href).removeSearch('package_rollback');">Any</a>
                     </li>
                     <li class="divider"></li>
                     <li role="presentation">
                         <a role="menuitem" tabindex="-1" href="javascript:void(0)"
-                           onclick="window .location.href = URI(location.href).removeSearch
-                           ('package_rollback').addSearch({ rollback: '1' }); ">True</a> </li>
+                           onclick="window.location.href = URI(location.href).removeSearch
+                           ('package_rollback').addSearch({ package_rollback: '1' }); ">True</a>
+                    </li>
                     <li role="presentation">
                         <a role="menuitem" tabindex="-1" href="javascript:void(0)"
-                           onclick="window .location.href = URI(location.href).removeSearch
-                           ('package_rollback').addSearch({ rollback: '0' }); ">False</a>
+                           onclick="window.location.href = URI(location.href).removeSearch
+                           ('package_rollback').addSearch({ package_rollback: '0' }); ">False</a>
                     </li>
                   </ul>
                 </div>
@@ -135,7 +166,7 @@
         </tr>
         {% for release in releases %}
         <tr>
-            <td><a href="/release/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a></td>
+            <td><a href="/releases/{{ release['id'] }}">{{ release['id'] | short_uuid }}</a></td>
             <td>{{ release['references'] | join('<br />') }}</td>
             <td>{{ release['user'] }}</td>
             <td>{{ release['stime'] | humanise_time }}</td>
@@ -164,7 +195,19 @@
         </tr>
         {% endfor %}
         </table>
-    </div>
+      </div>
+  </div>
+<div class="row">
+  <div class="btn-group">
+  <button class="btn btn-default btn-md" type="button" id="page_prev" aria-expanded="true"
+       onclick="window.location.href = URI(location.href).removeSearch('page').addSearch({page: {{ page }} - 1 });">
+      &lt; Prev
+  </button>
+  <button class="btn btn-default btn-md" type="button" id="page_next" aria-expanded="true"
+    onclick="window.location.href = URI(location.href).removeSearch('page').addSearch({page: {{ page }} + 1 });">
+      Next &gt;
+  </button>
+  </div>
 </div>
 
 {% endblock %}

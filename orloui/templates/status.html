@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon.ico">
+
+    <title>Deployer Status</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/status.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body id="bootstrap-overrides">
+    <div class="container-fluid text-center">
+      {% include 'release_boxes.html' %}
+      <div class="row">
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3>Releases past week</h3>
+            </div>
+            <div class="panel-body">
+              <canvas id="chart-releases-7" width="400px" height="400px"></canvas>
+            </div>
+          </div>
+        </div>
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3>Releases past month</h3>
+              </div>
+              <div class="panel-body">
+                <canvas id="chart-releases-30" width="400px" height="400px"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3>Releases this year</h3>
+              </div>
+              <div class="panel-body">
+                <canvas id="chart-releases-year" width="400px" height="400px"></canvas>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col-md-12">
+            <a href="/status/">http://deployer.gt.ecg.so/status/</a><br />
+            <small>Client IP {{ request.environ['REMOTE_ADDR'] }}</small>
+          </div>
+      </div>
+    </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/Chart.min.js"></script>
+
+    <script type="text/javascript">
+      var ctx1= document.getElementById("chart-releases-30").getContext("2d");
+      var chart_data_30 = {{ chart_data_30 | tojson }};
+      var options = {
+        segmentShowStroke : true,
+        segmentStrokeColor : "#fff",
+        segmentStrokeWidth : 1,
+        percentageInnerCutout : 50, // This is 0 for Pie charts
+        animation: false,
+        legendTemplate : {% raw %}"<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"{% endraw %}
+      };
+      var chart30 = new Chart(ctx1).Doughnut(chart_data_30, options);
+
+      ctx1.font = "bold 96px Arial";
+      ctx1.fillStyle = 'grey';
+      ctx1.textAlign = 'center';
+      x = chart_data_30[0].value;
+      ctx1.fillText(x, 200, 232);
+
+      var ctx2= document.getElementById("chart-releases-7").getContext("2d");
+      var chart_data_7 = {{ chart_data_7 | tojson }};
+      var options = {
+        segmentShowStroke : true,
+        segmentStrokeColor : "#fff",
+        segmentStrokeWidth : 1,
+        percentageInnerCutout : 50, // This is 0 for Pie charts
+        animation: false,
+        legendTemplate : {% raw %}"<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"{% endraw %}
+      };
+      var chart7 = new Chart(ctx2).Doughnut(chart_data_7, options);
+
+      ctx2.font = "bold 96px Arial";
+      ctx2.fillStyle = 'grey';
+      ctx2.textAlign = 'center';
+      x = chart_data_7[0].value;
+      ctx2.fillText(x, 200, 232);
+
+      var ctx3= document.getElementById("chart-releases-year").getContext("2d");
+      var chart_data_year = {{ chart_data_year | tojson }};
+      var options = {
+        segmentShowStroke : true,
+        segmentStrokeColor : "#fff",
+        segmentStrokeWidth : 1,
+        percentageInnerCutout : 50, // This is 0 for Pie charts
+        animation: false,
+        legendTemplate : {% raw %}"<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"{% endraw %}
+      };
+      var chartYear = new Chart(ctx3).Doughnut(chart_data_year, options);
+
+      ctx3.font = "bold 96px Arial";
+      ctx3.fillStyle = 'grey';
+      ctx3.textAlign = 'center';
+      x = chart_data_year[0].value;
+      ctx3.fillText(x, 200, 232);
+    </script>
+
+  </body>
+</html>
+

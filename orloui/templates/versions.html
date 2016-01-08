@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}List{% endblock %}
+{% block nav_versions %}active{% endblock %}
+
+{% block body %}
+<h2 class="sub-header">Current versions <small>by last release</small></h2>
+<p class="text-muted">Also available in <a href="?view=json">JSON format</a></p>
+<div class="table-responsive">
+    <table class="table table-striped">
+    <tr>
+        <th>Package</th>
+        <th>Current Version</th>
+{#        <th>Last Release</th>#}
+    </tr>
+    {% for name, version in versions.iteritems() %}
+    <tr>
+        <td><a href="/stats/package/{{ name }}">{{ name }}</td>
+        <td>{{ version }}</td>
+{#        <td><a href="/releases/{{ package['last_release_id'] }}">{{ package['last_release_time'] }}</a></td>#}
+    </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}
+
